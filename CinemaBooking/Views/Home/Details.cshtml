@@ -1,0 +1,58 @@
+﻿@model Movies
+<main>
+    <div class="movie-details-container">
+        <div class="movie-header">
+            <div class="movie-poster">
+                <img src="/images/@Model.ImgUrl" alt="@Model.Name">
+                <div class="movie-category">
+                    <span>@Model.Categories?.Name</span>
+                </div>
+            </div>
+            <div class="movie-info">
+                <h1>@Model.Name</h1>
+                <div class="movie-meta-info">
+                    <div class="meta-item">
+                        <i class="fas fa-calendar"></i>
+                        <span>@Model.StartDate.Year</span>
+                    </div>
+                </div>
+                <div class="movie-schedule">
+                    <div class="schedule-item">
+                        <label>Start Date:</label>
+                        <span>@Model.StartDate</span>
+                    </div>
+                    <div class="schedule-item">
+                        <label>End Date:</label>
+                        <span>@Model.EndDate</span>
+                    </div>
+                </div>
+                <div class="price-info">
+                    <div class="price-tag">
+                        <span class="price-label">Ticket Price:</span>
+                        <span class="price-amount">@Model.Price $</span>
+                    </div>
+                </div>
+                <div class="booking-section">
+                    <button class="book-now-btn" @(Model.IsAvailable ? "" : "disabled")>
+                        <i class="fas fa-ticket-alt"></i>
+                        Book Now
+                    </button>
+                    <button class="add-to-wishlist">
+                        <i class="far fa-heart"></i>
+                        Add to Wishlist
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="movie-details-content">
+            <h3>Synopsis</h3>
+            <p>@Model.Description</p>
+
+            <div class="additional-info">
+                <div class="info-item"><b>Genre:</b> @Model.Categories?.Name</div>
+               
+            </div>
+        </div>
+    </div>
+</main>

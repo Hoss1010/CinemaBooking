@@ -1,0 +1,196 @@
+﻿@model List<CinemaBooking.Models.Movies>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+<section class="hero-section">
+
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1>Experience Movies<br>Like Never Before</h1>
+            <p class="subtitle">Get ready for an unforgettable cinema experience with the latest movies and premium comfort</p>
+            <div class="movie-meta">
+                <div class="meta-item">
+                    <i class="fas fa-film"></i>
+                    <div class="meta-info">
+                        <span class="meta-number">100+</span>
+                        <span class="meta-label">Movies</span>
+                    </div>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-building"></i>
+                    <div class="meta-info">
+                        <span class="meta-number">50</span>
+                        <span class="meta-label">Cinemas</span>
+                    </div>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-couch"></i>
+                    <div class="meta-info">
+                        <span class="meta-number">5K+</span>
+                        <span class="meta-label">Seats</span>
+                    </div>
+
+                </div>
+                 
+            </div>
+            <div class="hero-buttons">
+                <button class="cta-button">Book Tickets <i class="fas fa-ticket-alt"></i></button>
+                <button class="secondary-button">View Schedule <i class="fas fa-calendar"></i></button>
+            </div>
+        </div>
+        <div class="featured-movie">
+            <div class="now-showing">NOW SHOWING</div>
+            <img src="images/movie7.png" alt="Featured Movie" class="featured-poster">
+            <div class="movie-rating">
+                <div class="rating-circle">
+                    <span class="rating-number">8.5</span>
+                    <span class="rating-text">IMDb</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hero-overlay"></div>
+</section>
+
+<section class="discover-movies">
+    <div class="section-header">
+        <h2>Discover Movies</h2>
+        <div class="filter-tabs">
+            <button class="active">Random</button>
+            <button>Popular</button>
+            <button>Recent</button>
+        </div>
+    </div>
+    <div class="movies-grid">
+        <!-- Movie Card 1 -->
+        @foreach (var item in Model)
+        {
+            <div class="movie-thumbnail">
+                <img src="/images/@item.ImgUrl" alt="@item.Name" />
+                <span class="availability-badge" data-status="@(item.IsAvailable ? "available" : "unavailable")">
+                    @(item.IsAvailable ? "Available" : "Unavailable")
+                </span>
+                <div class="movie-info">
+                    <h3>@item.Name</h3>
+                    <p>@item.StartDate | @item.EndDate</p>
+                    <div class="rating">@item.Price</div>
+                </div>
+                <div class="card-buttons">
+                    <button class="book-now-btn" @(item.IsAvailable ? "" : "disabled")>
+                        <i class="fas fa-ticket-alt"></i>
+                        Book Now
+                    </button>
+                    <!-- التعديل هنا -->
+                    <a asp-controller="Home" asp-action="Details" asp-route-id="@item.Id" class="details-btn">
+                        <i class="fas fa-info-circle"></i>
+                        Details
+                    </a>
+                </div>
+            </div>
+        }
+
+
+
+            @* <!-- Movie Card 2 -->
+            <div class="movie-thumbnail">
+                <img src="images/movie6.png" alt="I Origins">
+                <span class="availability-badge" data-status="coming-soon">Coming Soon</span>
+                <div class="movie-info">
+                    <h3>I Origins</h3>
+                    <p>2014 | Science Fiction</p>
+                    <div class="rating">7.3</div>
+                </div>
+                <div class="card-buttons">
+                    <button class="book-now-btn" disabled>
+                        <i class="fas fa-ticket-alt"></i>
+                        Book Now
+                    </button>
+                    <button class="details-btn">
+                        <i class="fas fa-info-circle"></i>
+                        Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- Movie Card 3 -->
+            <div class="movie-thumbnail">
+                <img src="images/movie7.png" alt="The Perks of Being a Wallflower">
+                <span class="availability-badge" data-status="available">Available</span>
+                <div class="movie-info">
+                    <h3>The Perks of Being a Wallflower</h3>
+                    <p>2012 | Drama, Romance</p>
+                    <div class="rating">7.8</div>
+                </div>
+                <div class="card-buttons">
+                    <button class="book-now-btn">
+                        <i class="fas fa-ticket-alt"></i>
+                        Book Now
+                    </button>
+                    <button class="details-btn">
+                        <i class="fas fa-info-circle"></i>
+                        Details
+                    </button>
+                </div>
+            </div>
+
+            <!-- Movie Card 4 -->
+            <div class="movie-thumbnail">
+                <img src="images/movie8.png" alt="Inside Out">
+                <span class="availability-badge" data-status="coming-soon">Coming Soon</span>
+                <div class="movie-info">
+                    <h3>Inside Out</h3>
+                    <p>2015 | Animation, Family</p>
+                    <div class="rating">8.2</div>
+                </div>
+                <div class="card-buttons">
+                    <button class="book-now-btn" disabled>
+                        <i class="fas fa-ticket-alt"></i>
+                        Book Now
+                    </button>
+                    <button class="details-btn">
+                        <i class="fas fa-info-circle"></i>
+                        Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <div class="pagination">
+        <button class="page-btn">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <div class="page-numbers">
+            <button class="page-number active">1</button>
+            <button class="page-number">2</button>
+            <button class="page-number">3</button>
+            <span class="page-dots">...</span>
+            <button class="page-number">10</button>
+        </div>
+        <button class="page-btn">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+ *@
+         
+    </div>
+    
+    </section>
+<div class="row">
+    <div class="col-12 d-flex justify-content-center">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+
+
+                @for (int i = 1; i <= ViewBag.numOfPages; i++)
+                {
+                    <li class="page-item"><a class="page-link" href="/Home/Index?page=@i">@i</a></li>
+                }
+
+            </ul>
+        </nav>
+        </div>
+    </div>
