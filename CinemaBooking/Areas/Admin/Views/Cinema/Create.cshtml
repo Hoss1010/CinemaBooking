@@ -1,0 +1,47 @@
+﻿@model Cinemas
+
+<div class="container my-3">
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-12">
+            <h2 class="display-6">Create a New Cinema</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <form action="/Admin/Cinema/Create" method="post">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" asp-for="Name">
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating">
+                    <textarea class="form-control" placeholder="Leave a description here" id="description" style="height: 100px" name="Description">@Model.Description</textarea>
+                     <label for="description">Description</label>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a description here" id="CinemaLogo" style="height: 100px" name="CinemaLogo">@Model.CinemaLogo</textarea>
+                        <label for="cinemalogo">CinemaLogo</label>
+                        <span asp-validation-for="CinemaLogo" class="text-danger"></span>
+                    </div>
+                    <div class="form-floating">
+                        <textarea class="form-control" placeholder="Leave a description here" id="Address" style="height: 100px" name="Address">@Model.Address</textarea>
+                        <label for="address">Address</label>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                    
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial">
+
+}
+

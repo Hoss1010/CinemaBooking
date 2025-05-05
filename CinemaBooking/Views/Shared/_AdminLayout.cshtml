@@ -1,0 +1,60 @@
+﻿ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Panel</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="~/css/admin.css" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="admin-header bg-dark text-white p-3">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <h2 class="m-0">🎬 Admin Dashboard</h2>
+            <a class="btn btn-outline-light" href="/Customer/Home/Index">Back to Site</a>
+        </div>
+    </header>
+
+    <div class="container-fluid">
+        <div class="row">
+            <aside class="col-md-2 bg-secondary text-white sidebar p-3">
+                <h5>Manage</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-controller="Movie" asp-action="Index">
+                            <i class="fas fa-film me-2"></i>Movies
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-controller="Category" asp-action="Index">
+                            <i class="fas fa-tags me-2"></i>Categories
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" asp-controller="Cinema" asp-action="Index">
+                            <i class="fas fa-building me-2"></i>Cinemas
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+
+            <main class="col-md-10 p-4">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-auto">
+        <p>© 2024 Cinema Booking Admin Panel</p>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/admin.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

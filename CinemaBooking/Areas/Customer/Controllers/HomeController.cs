@@ -5,12 +5,13 @@ using CinemaBooking.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace CinemaBooking.Controllers
+namespace CinemaBooking.Areas.Customer.Controllers   
 {
+    [Area("Customer")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _context=new ApplicationDbContext();
+        private readonly ApplicationDbContext _context = new ApplicationDbContext();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -29,7 +30,7 @@ namespace CinemaBooking.Controllers
 
             if (Movie.ToList().Count() == 0)
             {
-                return RedirectToAction(nameof(NotFound));
+                return RedirectToAction(nameof(NotFoundPage));
             }
 
             var numOfDoctors = Movie.Count();
@@ -47,9 +48,14 @@ namespace CinemaBooking.Controllers
                 .FirstOrDefault(m => m.Id == id);
 
             if (movie == null)
-                return NotFound();
+                return NotFoundPage();
 
             return View(movie);
+        }
+
+        public IActionResult NotFoundPage()
+        {
+            return View();
         }
 
         public IActionResult Privacy()
@@ -62,5 +68,6 @@ namespace CinemaBooking.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
     }
 }

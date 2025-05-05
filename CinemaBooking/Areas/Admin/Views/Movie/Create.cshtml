@@ -1,0 +1,93 @@
+﻿@using CinemaBooking.Models.ViewModels
+@model CategoryWithCinemaVM
+
+<div class="container my-3">
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-12">
+            <h2 class="display-6">Create a New Category</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <form action="/Admin/Movie/Create" method="post">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" asp-for="@Model.movies.Name">
+                    <span asp-validation-for="@Model.movies.Name" class="text-danger"></span>
+                </div>
+                <div class="form-floating">
+                    <textarea class="form-control" placeholder="Leave a description here" id="description" style="height: 100px" name="Description">@Model.movies.Description</textarea>
+                    <label for="description">Description</label>
+                    <span asp-validation-for="@Model.movies.Description" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price</label>
+                    <input type="number" class="form-control" asp-for="@Model.movies.Price">
+                    <span asp-validation-for="@Model.movies.Price" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="imgUrl" class="form-label">ImgUrl</label>
+                    <input type="text" class="form-control" asp-for="@Model.movies.ImgUrl">
+                    <span asp-validation-for="@Model.movies.ImgUrl" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="TrailerUrl" class="form-label">TrailerUrl</label>
+                    <input type="text" class="form-control" asp-for="@Model.movies.TrailerUrl">
+                    <span asp-validation-for="@Model.movies.TrailerUrl" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="StartDate" class="form-label">StartDate</label>
+                    <input type="date" class="form-control" asp-for="@Model.movies.StartDate">
+                    <span asp-validation-for="@Model.movies.StartDate" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="EndDate" class="form-label">EndDate</label>
+                    <input type="date" class="form-control" asp-for="@Model.movies.EndDate">
+                    <span asp-validation-for="@Model.movies.EndDate" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="CinemaId" class="form-label">Cinema Name</label>
+                    @* <input type="number" class="form-control" asp-for="@Model.Product.BrandId"> *@
+                    <select asp-for="@Model.movies.CinemaId" class="form-select">
+                        @foreach (var item in Model.Cinema)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="@Model.movies.CinemaId" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="CategoryId" class="form-label">Category Name</label>
+                    @* <input type="number" class="form-control" asp-for="@Model.Product.CategoryId">  *@
+
+                    <select asp-for="@Model.movies.CategoryId" class="form-select">
+                        @foreach (var item in Model.Categories)
+                        {
+                            <option value="@item.Id">@item.Name</option>
+                        }
+                    </select>
+
+                    <span asp-validation-for="@Model.movies.CategoryId" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" asp-for="@Model.movies.IsAvailable">
+                        <option value="true">Available</option>
+                        <option value="false">UnAvailable</option>
+                    </select>
+                    <span asp-validation-for="@Model.movies.IsAvailable" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <partial name="_ValidationScriptsPartial">
+
+}
+
