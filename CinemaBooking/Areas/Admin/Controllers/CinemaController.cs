@@ -1,33 +1,40 @@
 ﻿using CinemaBooking.Data;
 using CinemaBooking.Models;
+using CinemaBooking.Repositories;
+using CinemaBooking.Repositories.IRepositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaBooking.Areas.Admin.Controllers
 {
     [Area("Admin")]
-        public class CinemaController : Controller
+    public class CinemaController : Controller
+    {
+        //private readonly ApplicationDbContext _Context = new();
+        private readonly ICinemaRepository _cinemaRepository;
+        public CinemaController(ICinemaRepository cinemaRepository)
         {
-            private readonly ApplicationDbContext _Context = new();
-            public IActionResult Index()
-            {
-                var Cinema = _Context.Cinema;
-                return View(Cinema.ToList());
-            }
-            public IActionResult Create()
-            {
-                return View(new Cinemas());
-            }
+            _cinemaRepository = cinemaRepository;
+        }
+        public IActionResult Index()
+        {
+            var Cinema = _cinemaRepository.Get();
+            return View(Cinema.ToList());
+        }
+        public IActionResult Create()
+        {
+            return View(new Cinemas());
+        }
 
-            [HttpPost]
-            public IActionResult Create(Cinemas cinemas)
-            {
-                _Context.Cinema.Add(cinemas);
-                _Context.SaveChanges();
-                return RedirectToAction(nameof(Index));
-            }
+        [HttpPost]
+        public async Task<IActionResult> Create(Cinemas cinemas)
+        {
+            await _cinemaRepository.CreateAsync(cinemas);
+            await _cinemaRepository.CommitAsync();
+            return RedirectToAction(nameof(Index));
+        }
         public IActionResult Edit(int id)
         {
-            var Cinema = _Context.Cinema.Find(id);
+            var Cinema = _cinemaRepository.GetOne(e => e.Id == id);
 
             if (Cinema is not null)
             {
@@ -38,19 +45,19 @@ namespace CinemaBooking.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Cinemas cinemas)
+        public async Task<IActionResult> Edit(Cinemas cinemas)
         {
-            _Context.Cinema.Update(cinemas);
-            _Context.SaveChanges();
+            _cinemaRepository.Update(cinemas);
+            await _cinemaRepository.CommitAsync();
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var Cinema = _Context.Cinema.Find(id);
+            var Cinema = _cinemaRepository.GetOne(e => e.Id == id); ;
             if (Cinema is not null)
             {
-                _Context.Remove(Cinema);
-                _Context.SaveChanges();
+                _cinemaRepository.Delete(Cinema);
+                await _cinemaRepository.CommitAsync();
                 return RedirectToAction(nameof(Index));
             }
             return RedirectToAction("NotFoundPage", "Home");

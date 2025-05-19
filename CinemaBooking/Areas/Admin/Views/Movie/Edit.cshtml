@@ -4,13 +4,14 @@
 <div class="container my-3">
     <div class="row mb-3 align-items-center">
         <div class="col-md-12">
-            <h2 class="display-6">Create a New Movie</h2>
+            <h2 class="display-6">Edit Movie</h2>
         </div>
     </div>
 
     <div class="row">
         <div class="col-12">
-            <form action="/Admin/Movie/Create" method="post" enctype="multipart/form-data">
+            <form action="/Admin/Movie/Edit" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="@Model.movies.Id" />
                 <div class="mb-3">
                     <label for="name" class="form-label">Name</label>
                     <input type="text" class="form-control" asp-for="movies.Name">
@@ -30,6 +31,13 @@
                     <label for="imgUrl" class="form-label">ImgUrl</label>
                     <input type="file" class="form-control" asp-for="@Model.movies.ImgUrl" name="ImgUrl" multiple>
                     <span asp-validation-for="@Model.movies.ImgUrl" class="text-danger"></span>
+                    @* Show existing image if any *@
+                    <img id="imgPreview" src="~/images/@(string.IsNullOrEmpty(Model.movies.ImgUrl) ? "#" : Url.Content(Model.movies.ImgUrl))"
+                         alt="Image Preview"
+                         class="img-thumbnail my-2"
+                         style="@(string.IsNullOrEmpty(Model.movies.ImgUrl) ? "display: none;" : "display: block;") max-height: 200px;" />
+                    <a class="btn btn-danger" href="/Admin/Movie/DeleteImg/@Model.movies.Id">Delete</a>
+                    @* <a class="btn btn-warning" href="/Admin/Product/DeleteImg/@Model.Product.Id">Replace</a> *@
                 </div>
                 <div class="mb-3">
                     <label for="TrailerUrl" class="form-label">TrailerUrl</label>
@@ -52,7 +60,7 @@
                     <select asp-for="@Model.movies.CinemaId" class="form-select">
                         @foreach (var item in Model.Cinema)
                         {
-                            <option value="@item.Id">@item.Name</option>
+                                <option value="@item.Id">@item.Name</option>
                         }
                     </select>
                     <span asp-validation-for="@Model.movies.CinemaId" class="text-danger"></span>
@@ -64,7 +72,7 @@
                     <select asp-for="@Model.movies.CategoryId" class="form-select">
                         @foreach (var item in Model.Categories)
                         {
-                            <option value="@item.Id">@item.Name</option>
+                                <option value="@item.Id">@item.Name</option>
                         }
                     </select>
 
@@ -87,7 +95,7 @@
 
 @section Scripts {
 
-    <partial name="_ValidationScriptsPartial">
+        <partial name="_ValidationScriptsPartial">
 
-}
+} 
 

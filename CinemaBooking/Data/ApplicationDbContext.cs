@@ -1,13 +1,26 @@
 ﻿using CinemaBooking.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.General;
 
 namespace CinemaBooking.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext :  IdentityDbContext<ApplicationUser>
     {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
+        {
+        }
         public DbSet<Movies> Movie { get; set; }
         public DbSet<Cinemas> Cinema { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Actors> actors { get; set; }
+        public DbSet<ActorMovie> actorMovies { get; set; }
+        public DbSet<Image> images { get; set; }
+        // Detracted
+        public ApplicationDbContext()
+        {
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);

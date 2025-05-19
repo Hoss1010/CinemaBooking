@@ -1,5 +1,7 @@
 ﻿using CinemaBooking.Data;
 using CinemaBooking.Models;
+using CinemaBooking.Repositories;
+using CinemaBooking.Repositories.IRepositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CinemaBooking.Areas.Admin.Controllers
@@ -7,10 +9,16 @@ namespace CinemaBooking.Areas.Admin.Controllers
     [Area("Admin")]
     public class CategoryController : Controller
     {
-        private readonly ApplicationDbContext _Context = new();
+        //private readonly ApplicationDbContext _Context = new();
+        private readonly  ICategoryRepository _categoryRepository ;
+
+        public CategoryController(ICategoryRepository categoryRepository)
+        {
+            _categoryRepository = categoryRepository;
+        }
         public IActionResult Index()
         {
-            var Categories =_Context.Categories;
+            var Categories = _categoryRepository.Get();
             return View(Categories.ToList());
         }
         public IActionResult Create()
@@ -19,15 +27,15 @@ namespace CinemaBooking.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(Category category)
+        public async Task<IActionResult> Create(Category category)
         {
-            _Context.Categories.Add(category);
-            _Context.SaveChanges();
+            await _categoryRepository.CreateAsync(category);
+            await _categoryRepository.CommitAsync();
             return RedirectToAction(nameof(Index));
         }
         public IActionResult Edit(int id)
         {
-            var category = _Context.Categories.Find(id);
+            var category = _categoryRepository.GetOne(e => e.Id == id);
 
             if (category is not null)
             {
@@ -38,19 +46,19 @@ namespace CinemaBooking.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(Category category)
+        public async Task<IActionResult> Edit(Category category)
         {
-            _Context.Categories.Update(category);
-            _Context.SaveChanges();
+             _categoryRepository.Update(category);
+            await _categoryRepository.CommitAsync();
             return RedirectToAction(nameof(Index));
         }
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-           var category= _Context.Categories.Find(id);
+           var category= _categoryRepository.GetOne(e => e.Id == id);
             if (category is not null)
             {
-                _Context.Remove(category);
-                _Context.SaveChanges();
+                _categoryRepository.Delete(category);
+                await _categoryRepository.CommitAsync();
                 return RedirectToAction(nameof(Index));
             }
             return RedirectToAction("NotFoundPage","Home");

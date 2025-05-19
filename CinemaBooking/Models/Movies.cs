@@ -5,10 +5,12 @@ namespace CinemaBooking.Models
     public class Movies
     {
         public int Id { get; set; }
+
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public double Price { get; set; }
-        public string ImgUrl { get; set; }
+        //public ICollection<Image> ImgUrl { get; set; }
+        public String ImgUrl { get; set; } = string.Empty;
         public string TrailerUrl { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -19,6 +21,7 @@ namespace CinemaBooking.Models
         [ValidateNever]
         public Category? Categories { get; set; }
         public bool IsAvailable { get; set; }
+        public List<ActorMovie> actorMovies { get; set; }
 
     }
 }

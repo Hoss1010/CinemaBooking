@@ -10,7 +10,7 @@ namespace CinemaBooking.Areas.Admin.Controllers
         private readonly ApplicationDbContext _Context = new();
         public IActionResult Index()
         {
-            var movies = _Context.Movie.Include(e => e.Cinema).Include(e => e.Categories); ;
+            var movies = _Context.Movie.Include(e => e.Cinema).Include(e => e.Categories);
 
             return View(movies.ToList());
         }
