@@ -1,5 +1,6 @@
 ﻿using CinemaBooking.Models;
 using CinemaBooking.Models.ViewModels;
+using CinemaBooking.Repositories.IRepositories;
 using CinemaBooking.Utitlity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -15,12 +16,14 @@ namespace CinemaBooking.Areas.Identity.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
+        private readonly IApplicationUserOtpRepository _applicationUserOtpRepository;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IEmailSender emailSender, IApplicationUserOtpRepository applicationUserOtpRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _applicationUserOtpRepository = applicationUserOtpRepository;
         }
 
         public IActionResult Register()
@@ -114,7 +117,7 @@ namespace CinemaBooking.Areas.Identity.Controllers
         {
             await _signInManager.SignOutAsync();
 
-            TempData["Notification"] = "Login successfully";
+            TempData["Notification"] = "Logout successfully";
 
             return RedirectToAction("Index", "Home", new { area = "Customer" });
         }
@@ -185,6 +188,117 @@ namespace CinemaBooking.Areas.Identity.Controllers
 
             ModelState.AddModelError("UserNameOREmail", "Invalid User Name Or Email");
             return View(resendEmailConfirmationVM);
+        }
+
+        public IActionResult ForgetPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> ForgetPassword(ForgetPasswordVM forgetPasswordVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(forgetPasswordVM);
+            }
+
+            var applicationUser = await _userManager.FindByEmailAsync(forgetPasswordVM.UserNameOREmail);
+
+            if (applicationUser is null)
+            {
+                applicationUser = await _userManager.FindByNameAsync(forgetPasswordVM.UserNameOREmail);
+            }
+
+            if (applicationUser is not null)
+            {
+
+                string token = await _userManager.GeneratePasswordResetTokenAsync(applicationUser);
+
+                var otpNumber = new Random().Next(1000, 9999);
+
+                //var resetPassword = Url.Action("ResetPassword", "Account", new { area = "Identity", ApplicationUserId = applicationUser.Id, Token = token }, Request.Scheme);
+
+                //await _emailSender.SendEmailAsync(applicationUser.Email, "Reset Password", $"<h1>Reset Password Account By Click <a href='{resetPassword}'>Here</a></h1>");
+
+                var otpInDB = _applicationUserOtpRepository.Get(e => e.ApplicationUserId == applicationUser.Id).LastOrDefault();
+
+                if (otpInDB is not null && (DateTime.UtcNow - otpInDB.ReleaseData).TotalMinutes > 10)
+                {
+                    await _applicationUserOtpRepository.CreateAsync(new()
+                    {
+                        ApplicationUserId = applicationUser.Id,
+                        OTP = otpNumber,
+                        ReleaseData = DateTime.UtcNow,
+                        ExpirationData = DateTime.UtcNow.AddMinutes(2)
+                    });
+                    await _applicationUserOtpRepository.CommitAsync();
+
+                    await _emailSender.SendEmailAsync(applicationUser.Email, "Reset Password", $"<h1>Reset Password Account By this number {otpNumber}</h1>");
+
+                    TempData["Notification"] = "Check Your email, you find otp";
+                    TempData["_ValidationToken"] = Guid.NewGuid().ToString();
+
+                    return RedirectToAction("ResetPassword", "Account", new { area = "Identity", ApplicationUserId = applicationUser.Id, Token = token });
+                }
+
+                ModelState.AddModelError(String.Empty, "There is error");
+                return View(forgetPasswordVM);
+            }
+
+            ModelState.AddModelError("UserNameOREmail", "Invalid User Name Or Email");
+            return View(forgetPasswordVM);
+        }
+
+        public IActionResult ResetPassword()
+        {
+            if (TempData["_ValidationToken"] is not null)
+            {
+                return View();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordVM resetPasswordVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(resetPasswordVM);
+            }
+
+            var applicationUser = await _userManager.FindByIdAsync(resetPasswordVM.ApplicationUserId);
+
+            if (applicationUser is not null)
+            {
+
+                var otpInDB = _applicationUserOtpRepository.Get(e => e.ApplicationUserId == resetPasswordVM.ApplicationUserId).LastOrDefault();
+
+                if (otpInDB.OTP == resetPasswordVM.OTP && otpInDB.ExpirationData <= DateTime.UtcNow)
+                {
+                    var result = await _userManager.ResetPasswordAsync(applicationUser, resetPasswordVM.Token, resetPasswordVM.Password);
+
+
+                    if (result.Succeeded)
+                    {
+                        TempData["Notification"] = "Reset Password Successfully";
+
+                        return RedirectToAction("Index", "Home", new { area = "Customer" });
+                    }
+                    else
+                    {
+                        foreach (var item in result.Errors)
+                        {
+                            ModelState.AddModelError(string.Empty, item.Description);
+                        }
+                    }
+                }
+
+                ModelState.AddModelError("OTP", "Invalid OTP or Expired");
+                return View(resetPasswordVM);
+            }
+
+            return BadRequest();
         }
     }
 }

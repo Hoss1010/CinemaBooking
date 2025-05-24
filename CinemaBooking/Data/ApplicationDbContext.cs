@@ -17,6 +17,7 @@ namespace CinemaBooking.Data
         public DbSet<Actors> actors { get; set; }
         public DbSet<ActorMovie> actorMovies { get; set; }
         public DbSet<Image> images { get; set; }
+        public DbSet<ApplicationUserOTP> ApplicationUserOTPs { get; set; }
         // Detracted
         public ApplicationDbContext()
         {

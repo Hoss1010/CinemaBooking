@@ -5,7 +5,7 @@ using CinemaBooking.Repositories;
 using CinemaBooking.Repositories.IRepositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using CinemaBooking.Utitlity;
+using CinemaBooking.Utitlity; 
 
 namespace CinemaBooking
 {
@@ -29,6 +29,8 @@ namespace CinemaBooking
             builder.Services.AddScoped<ICategoryRepository, CategoryRepsitory>();
             builder.Services.AddScoped<ICinemaRepository, CinemaRepository>();
             builder.Services.AddTransient<IEmailSender, EmailSender>();
+            builder.Services.AddScoped<IApplicationUserOtpRepository, ApplicationUserOtpRepository>();
+            builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
 
             var app = builder.Build();
 

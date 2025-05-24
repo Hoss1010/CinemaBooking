@@ -70,19 +70,16 @@
 
                     <span asp-validation-for="@Model.movies.CategoryId" class="text-danger"></span>
                 </div>
-                @* <div class="mb-3">
-                    <label for="CategoryId" class="form-label">Category Name</label>
-                    <input type="number" class="form-control" asp-for="@Model.Product.CategoryId">  
 
-                    <select asp-for="@Model.movies.CategoryId" class="form-select">
-                        @foreach (var item in Model.Categories)
-                        {
-                            <option value="@item.Id">@item.Name</option>
-                        }
+
+                <div class="mb-3">
+                    <label class="form-label">Actor Name</label>
+                    <select asp-for="ActorsId" asp-items="@(new MultiSelectList(Model.actors,"Id","FirstName"))" class="form-select" multiple>
+                         
                     </select>
 
-                    <span asp-validation-for="@Model.movies.CategoryId" class="text-danger"></span>
-                </div> *@
+                    @* <span asp-validation-for="@Model.actors" class="text-danger"></span> *@
+                </div> 
                 <div class="mb-3">
                     <label for="status" class="form-label">Status</label>
                     <select class="form-select" asp-for="@Model.movies.IsAvailable">
